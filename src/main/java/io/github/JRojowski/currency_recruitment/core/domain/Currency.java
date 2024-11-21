@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum Currency {
     PLN("PLN"),
-    USD("USD");
+    USD("USD"),
+    EUR("EUR");
 
     private final String code;
 }
