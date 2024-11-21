@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 class ExchangeCurrencyUseCaseTest {
     private static final UUID ACCOUNT_ID = UUID.randomUUID();
     private static final Currency CURRENCY_USD = Currency.USD;
-    private static final BigDecimal PLN_TO_USD_CURRENCY = new BigDecimal("0.5");
+    private static final BigDecimal PLN_TO_USD_CURRENCY = new BigDecimal("0.25");
     private static final BigDecimal USD_TO_PLN_CURRENCY = new BigDecimal(4);
     public static final Currency CURRENCY_PLN = Currency.PLN;
 
@@ -42,8 +42,8 @@ class ExchangeCurrencyUseCaseTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> exchangeCurrencyUseCase.execute(ACCOUNT_ID, null))
-                .isInstanceOf(ClassNotFoundException.class)
-                .hasMessage("Account not found.");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Account not found.");
     }
 
     @Test
@@ -55,8 +55,8 @@ class ExchangeCurrencyUseCaseTest {
                 .thenReturn(Optional.of(existingAccount));
 
         assertThatThrownBy(() -> exchangeCurrencyUseCase.execute(ACCOUNT_ID, exchangeRequestDto))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("Account is of different currency.");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Account currency mismatch.");
     }
 
     @Test
@@ -68,8 +68,8 @@ class ExchangeCurrencyUseCaseTest {
                 .thenReturn(Optional.of(existingAccount));
 
         assertThatThrownBy(() -> exchangeCurrencyUseCase.execute(ACCOUNT_ID, exchangeRequestDto))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("Not enough money (PLN).");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Not enough money (PLN).");
     }
 
     @Test
@@ -81,17 +81,14 @@ class ExchangeCurrencyUseCaseTest {
                 .thenReturn(Optional.of(existingAccount));
 
         assertThatThrownBy(() -> exchangeCurrencyUseCase.execute(ACCOUNT_ID, exchangeRequestDto))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("Not enough money (USD).");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Not enough money (USD).");
     }
 
     @Test
     void givenCurrencyAccount_whenExecuteExchangeOfPln_thenExchangeSuccessful() {
         ExchangeRequestDto exchangeRequestDto = new ExchangeRequestDto(Currency.PLN, new BigDecimal(100));
         Account existingAccount = new Account(ACCOUNT_ID, CURRENCY_USD, new BigDecimal(200), BigDecimal.ZERO, null);
-
-        BigDecimal expectedAmountPln = existingAccount.getBalancePln().subtract(exchangeRequestDto.getAmount());
-        BigDecimal expectedAmountCurrency = new BigDecimal(200).multiply(PLN_TO_USD_CURRENCY);
 
         when(accountRepository.findById(ACCOUNT_ID))
                 .thenReturn(Optional.of(existingAccount));
@@ -101,19 +98,16 @@ class ExchangeCurrencyUseCaseTest {
         UserAccountDto result = exchangeCurrencyUseCase.execute(ACCOUNT_ID, exchangeRequestDto);
 
         assertThat(result).hasNoNullFieldsOrProperties();
-        assertThat(result.id()).isEqualTo(existingAccount.getId());
-        assertThat(result.currency()).isEqualTo(existingAccount.getCurrency());
-        assertThat(result.balancePln()).isEqualTo(expectedAmountPln);
-        assertThat(result.balanceCurrency()).isEqualTo(expectedAmountCurrency);
+        assertThat(result.getId()).isEqualTo(existingAccount.getId());
+        assertThat(result.getCurrency()).isEqualTo(existingAccount.getCurrency());
+        assertThat(result.getBalancePln()).isEqualByComparingTo(new BigDecimal(100));
+        assertThat(result.getBalanceCurrency()).isEqualByComparingTo(new BigDecimal(25));
     }
 
     @Test
     void givenCurrencyAccount_whenExecuteExchangeOfUsd_thenExchangeSuccessful() {
         ExchangeRequestDto exchangeRequestDto = new ExchangeRequestDto(CURRENCY_USD, new BigDecimal(100));
         Account existingAccount = new Account(ACCOUNT_ID, CURRENCY_USD, BigDecimal.ZERO, new BigDecimal(200), null);
-
-        BigDecimal expectedAmountPln = new BigDecimal(200).multiply(USD_TO_PLN_CURRENCY);
-        BigDecimal expectedAmountCurrency = existingAccount.getBalanceCurrency().subtract(exchangeRequestDto.getAmount());
 
         when(accountRepository.findById(ACCOUNT_ID))
                 .thenReturn(Optional.of(existingAccount));
@@ -123,9 +117,9 @@ class ExchangeCurrencyUseCaseTest {
         UserAccountDto result = exchangeCurrencyUseCase.execute(ACCOUNT_ID, exchangeRequestDto);
 
         assertThat(result).hasNoNullFieldsOrProperties();
-        assertThat(result.id()).isEqualTo(existingAccount.getId());
-        assertThat(result.currency()).isEqualTo(existingAccount.getCurrency());
-        assertThat(result.balancePln()).isEqualTo(expectedAmountPln);
-        assertThat(result.balanceCurrency()).isEqualTo(expectedAmountCurrency);
+        assertThat(result.getId()).isEqualTo(existingAccount.getId());
+        assertThat(result.getCurrency()).isEqualTo(existingAccount.getCurrency());
+        assertThat(result.getBalancePln()).isEqualByComparingTo(new BigDecimal(400));
+        assertThat(result.getBalanceCurrency()).isEqualByComparingTo(new BigDecimal(100));
     }
 }

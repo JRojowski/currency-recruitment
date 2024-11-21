@@ -31,7 +31,7 @@ class UserAccountController {
     })
     public ResponseEntity<UserAccountDto> createUserAccount(@RequestBody @Valid CreateUserAccountDto createUserAccountDto) {
         UserAccountDto userAccount = userAccountFacade.createUserAccount(createUserAccountDto);
-        return ResponseEntity.created(URI.create(userAccount.id().toString())).body(userAccount);
+        return ResponseEntity.created(URI.create(userAccount.getId().toString())).body(userAccount);
     }
 
     @GetMapping()
@@ -49,7 +49,7 @@ class UserAccountController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "NotFoundException")
     })
-    public ResponseEntity<UserAccountDto> getUseAccount(@PathVariable UUID id) {
+    public ResponseEntity<UserAccountDto> getUserAccount(@PathVariable UUID id) {
         UserAccountDto userAccount = userAccountFacade.getUserAccount(id);
         return ResponseEntity.ok(userAccount);
     }

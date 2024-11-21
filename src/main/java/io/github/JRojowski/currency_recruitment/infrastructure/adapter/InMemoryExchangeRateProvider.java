@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-
-class NbpExchangeRateProvider implements ExchangeRateProvider {
+@Service
+class InMemoryExchangeRateProvider implements ExchangeRateProvider {
     @Override
     public BigDecimal getCurrencyExchangeRate(Currency from, Currency to) {
-        return null;
+        return new BigDecimal(2);
     }
 }

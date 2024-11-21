@@ -3,14 +3,9 @@ package io.github.JRojowski.currency_recruitment.application;
 import io.github.JRojowski.currency_recruitment.api.dto.CreateUserAccountDto;
 import io.github.JRojowski.currency_recruitment.api.dto.ExchangeRequestDto;
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
-import io.github.JRojowski.currency_recruitment.application.CreateUserAccountUseCase;
-import io.github.JRojowski.currency_recruitment.application.ExchangeCurrencyUseCase;
-import io.github.JRojowski.currency_recruitment.application.GetUserAccountsUserCase;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +15,7 @@ public class UserAccountFacade {
 
     private final CreateUserAccountUseCase createUserAccountUseCase;
     private final ExchangeCurrencyUseCase exchangeCurrencyUseCase;
-    private final GetUserAccountsUserCase getUserAccountsUserCase;
+    private final GetUserAccountsUseCase getUserAccountsUseCase;
     private final GetUserAccountUseCase getUserAccountUseCase;
 
     public UserAccountDto createUserAccount(CreateUserAccountDto createUserAccountDto) {
@@ -28,7 +23,8 @@ public class UserAccountFacade {
     }
 
     public List<UserAccountDto> getUserAccounts() {
-        return getUserAccountsUserCase.execute();
+        String personalId = "Take from Security";
+        return getUserAccountsUseCase.execute(personalId);
     }
 
     public UserAccountDto getUserAccount(UUID id) {

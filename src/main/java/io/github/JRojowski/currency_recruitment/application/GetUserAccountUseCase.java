@@ -14,6 +14,8 @@ class GetUserAccountUseCase {
     private final AccountRepository accountRepository;
 
     public UserAccountDto execute(UUID id) {
-        return null;
+        return accountRepository.findById(id)
+                .map(UserAccountDto::fromAccount)
+                .orElseThrow(() -> new RuntimeException("Account not found."));
     }
 }

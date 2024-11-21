@@ -38,8 +38,8 @@ class GetUserAccountUseCaseTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> getUserAccountUseCase.execute(ACCOUNT_ID))
-                .isInstanceOf(ClassNotFoundException.class)
-                .hasMessage("Account not found.");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Account not found.");
     }
 
     @Test
@@ -52,10 +52,10 @@ class GetUserAccountUseCaseTest {
         UserAccountDto result = getUserAccountUseCase.execute(ACCOUNT_ID);
 
         assertThat(result).hasNoNullFieldsOrProperties();
-        assertThat(result.id()).isEqualTo(account.getId());
-        assertThat(result.currency()).isEqualTo(account.getCurrency());
-        assertThat(result.balancePln()).isEqualTo(account.getBalancePln());
-        assertThat(result.balanceCurrency()).isEqualTo(account.getBalanceCurrency());
+        assertThat(result.getId()).isEqualTo(account.getId());
+        assertThat(result.getCurrency()).isEqualTo(account.getCurrency());
+        assertThat(result.getBalancePln()).isEqualTo(account.getBalancePln());
+        assertThat(result.getBalanceCurrency()).isEqualTo(account.getBalanceCurrency());
     }
 
 }

@@ -1,6 +1,5 @@
 package io.github.JRojowski.currency_recruitment.application;
 
-import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
 import io.github.JRojowski.currency_recruitment.core.port.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,16 +7,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-class GetUserAccountsUserCaseTest {
+class GetUserAccountsUseCaseTest {
 
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    GetUserAccountsUserCase getUserAccountsUserCase;
+    GetUserAccountsUseCase getUserAccountsUseCase;
 
     @Test
     void givenUserWithAccounts_whenExecute_thenReturnUserAccounts() {

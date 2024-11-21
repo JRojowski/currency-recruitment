@@ -8,7 +8,6 @@ import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
 import io.github.JRojowski.currency_recruitment.core.port.UserRepository;
 import org.apache.coyote.BadRequestException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +21,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,6 +31,7 @@ class CreateUserAccountUseCaseTest {
     private static final String FORENAME = "Forename";
     private static final String SURNAME = "Surname";
     private static final Currency CURRENCY = Currency.USD;
+    public static final BigDecimal DEPOSIT = new BigDecimal(200);
 
     @Mock
     AccountRepository accountRepository;
@@ -45,13 +44,18 @@ class CreateUserAccountUseCaseTest {
     void givenNewUserAndNewAccount_whenExecute_thenSaveNewUserAndNewAccount() {
         CreateUserAccountDto createUserAccountDto = createUserAccountDto();
 
+        when(userRepository.save(any()))
+                .thenReturn(new BankUser());
+        when(accountRepository.save(any()))
+                .thenReturn(new Account(UUID.randomUUID(), CURRENCY, DEPOSIT, BigDecimal.ZERO, null));
+
         UserAccountDto result = createUserAccountUseCase.execute(createUserAccountDto);
 
         verify(userRepository, times(1)).save(any(BankUser.class));
         verify(accountRepository, times(1)).save(any(Account.class));
-        assertThat(result.currency()).isEqualTo(createUserAccountDto.getCurrency());
-        assertThat(result.balancePln()).isEqualTo(createUserAccountDto.getDeposit());
-        assertThat(result.balanceCurrency()).isZero();
+        assertThat(result.getCurrency()).isEqualTo(createUserAccountDto.getCurrency());
+        assertThat(result.getBalancePln()).isEqualTo(createUserAccountDto.getDeposit());
+        assertThat(result.getBalanceCurrency()).isZero();
     }
 
     @Test
@@ -60,14 +64,16 @@ class CreateUserAccountUseCaseTest {
 
         when(userRepository.findByPersonalId(any()))
                 .thenReturn(Optional.of(new BankUser()));
+        when(accountRepository.save(any()))
+                .thenReturn(new Account(UUID.randomUUID(), CURRENCY, DEPOSIT, BigDecimal.ZERO, null));
 
         UserAccountDto result = createUserAccountUseCase.execute(createUserAccountDto);
 
         verify(userRepository, never()).save(any(BankUser.class));
         verify(accountRepository, times(1)).save(any(Account.class));
-        assertThat(result.currency()).isEqualTo(createUserAccountDto.getCurrency());
-        assertThat(result.balancePln()).isEqualTo(createUserAccountDto.getDeposit());
-        assertThat(result.balanceCurrency()).isZero();
+        assertThat(result.getCurrency()).isEqualTo(createUserAccountDto.getCurrency());
+        assertThat(result.getBalancePln()).isEqualTo(createUserAccountDto.getDeposit());
+        assertThat(result.getBalanceCurrency()).isZero();
     }
 
     @Test
@@ -81,17 +87,17 @@ class CreateUserAccountUseCaseTest {
                 .thenReturn(Optional.of(existingUser));
 
         assertThatThrownBy(() -> createUserAccountUseCase.execute(createUserAccountDto))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("Account with such currency already exists.");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Account with such currency already exists.");
     }
 
     private CreateUserAccountDto createUserAccountDto() {
         return CreateUserAccountDto.builder()
-                .personal_id(PERSONAL_ID)
+                .personalId(PERSONAL_ID)
                 .name(FORENAME)
                 .surname(SURNAME)
                 .currency(CURRENCY)
-                .deposit(new BigDecimal(200))
+                .deposit(DEPOSIT)
                 .build();
     }
 }

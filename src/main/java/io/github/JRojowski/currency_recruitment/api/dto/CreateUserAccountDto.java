@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class CreateUserAccountDto {
-    private String personal_id;
+    private String personalId;
     private String name;
     private String surname;
     private Currency currency;

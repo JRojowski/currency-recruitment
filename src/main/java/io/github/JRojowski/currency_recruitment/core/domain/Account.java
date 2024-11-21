@@ -1,5 +1,6 @@
 package io.github.JRojowski.currency_recruitment.core.domain;
 
+import io.github.JRojowski.currency_recruitment.api.dto.CreateUserAccountDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,8 +34,11 @@ public class Account {
     private BankUser bankUser;
 
 
-
-
-
-
+    public static Account fromCreateDto(CreateUserAccountDto createUserAccountDto) {
+        Account account = new Account();
+        account.setCurrency(createUserAccountDto.getCurrency());
+        account.setBalancePln(createUserAccountDto.getDeposit());
+        account.setBalanceCurrency(BigDecimal.ZERO);
+        return account;
+    }
 }
