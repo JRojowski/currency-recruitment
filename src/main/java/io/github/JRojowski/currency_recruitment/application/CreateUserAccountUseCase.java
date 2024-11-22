@@ -4,36 +4,38 @@ import io.github.JRojowski.currency_recruitment.api.dto.CreateUserAccountDto;
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.BankUser;
-import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
+import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 class CreateUserAccountUseCase {
 
     private final UserRepository userRepository;
-    private final AccountRepository accountRepository;
 
-    public UserAccountDto execute(CreateUserAccountDto createUserAccountDto) {
+    UserAccountDto execute(CreateUserAccountDto createUserAccountDto) {
         BankUser bankUser = userRepository
                 .findByPersonalId(createUserAccountDto.getPersonalId())
-                .orElseGet(() -> userRepository.save(BankUser.fromCreateDto(createUserAccountDto)));
+                .orElseGet(() -> BankUser.fromCreateDto(createUserAccountDto));
 
-        boolean accountAlreadyExists = bankUser.getAccounts()
-                .stream()
-                .anyMatch(acc -> acc.getCurrency().equals(createUserAccountDto.getCurrency()));
-
-        if (!accountAlreadyExists) {
-            Account account = Account.fromCreateDto(createUserAccountDto);
-            account.setBankUser(bankUser);
-            return UserAccountDto.fromAccount(accountRepository.save(account));
+        if (hasAccountWithCurrency(bankUser, createUserAccountDto.getCurrency())) {
+            throw new IllegalArgumentException("Account with currency " + createUserAccountDto.getCurrency() + " already exists.");
         }
 
-        throw new RuntimeException("Account with such currency already exists.");
+        Account account = Account.fromCreateDto(createUserAccountDto);
+        account.setBankUser(bankUser);
+        bankUser.getAccounts().add(account);
+        userRepository.save(bankUser);
+
+        return UserAccountDto.fromAccount(account);
+    }
+
+    private boolean hasAccountWithCurrency(BankUser bankUser, Currency currency) {
+        return bankUser.getAccounts()
+                .stream()
+                .anyMatch(account -> account.getCurrency().equals(currency));
     }
 
 }

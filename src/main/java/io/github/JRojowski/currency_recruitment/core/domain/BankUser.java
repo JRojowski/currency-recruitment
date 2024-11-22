@@ -22,7 +22,6 @@ import java.util.UUID;
 public class BankUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
@@ -35,6 +34,7 @@ public class BankUser {
 
     public static BankUser fromCreateDto(CreateUserAccountDto createUserAccountDto) {
         BankUser bankUser = new BankUser();
+        bankUser.setId(UUID.randomUUID());
         bankUser.setPersonalId(createUserAccountDto.getPersonalId());
         bankUser.setName(createUserAccountDto.getName());
         bankUser.setSurname(createUserAccountDto.getSurname());

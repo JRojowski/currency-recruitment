@@ -5,9 +5,7 @@ import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.BankUser;
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
-import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
 import io.github.JRojowski.currency_recruitment.core.port.UserRepository;
-import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,8 +32,6 @@ class CreateUserAccountUseCaseTest {
     public static final BigDecimal DEPOSIT = new BigDecimal(200);
 
     @Mock
-    AccountRepository accountRepository;
-    @Mock
     UserRepository userRepository;
     @InjectMocks
     CreateUserAccountUseCase createUserAccountUseCase;
@@ -46,13 +42,11 @@ class CreateUserAccountUseCaseTest {
 
         when(userRepository.save(any()))
                 .thenReturn(new BankUser());
-        when(accountRepository.save(any()))
-                .thenReturn(new Account(UUID.randomUUID(), CURRENCY, DEPOSIT, BigDecimal.ZERO, null));
 
         UserAccountDto result = createUserAccountUseCase.execute(createUserAccountDto);
 
         verify(userRepository, times(1)).save(any(BankUser.class));
-        verify(accountRepository, times(1)).save(any(Account.class));
+
         assertThat(result.getCurrency()).isEqualTo(createUserAccountDto.getCurrency());
         assertThat(result.getBalancePln()).isEqualTo(createUserAccountDto.getDeposit());
         assertThat(result.getBalanceCurrency()).isZero();
@@ -61,16 +55,11 @@ class CreateUserAccountUseCaseTest {
     @Test
     void givenExistingUserAndNewAccount_whenExecute_thenSaveOnlyNewAccount() {
         CreateUserAccountDto createUserAccountDto = createUserAccountDto();
-
         when(userRepository.findByPersonalId(any()))
                 .thenReturn(Optional.of(new BankUser()));
-        when(accountRepository.save(any()))
-                .thenReturn(new Account(UUID.randomUUID(), CURRENCY, DEPOSIT, BigDecimal.ZERO, null));
 
         UserAccountDto result = createUserAccountUseCase.execute(createUserAccountDto);
 
-        verify(userRepository, never()).save(any(BankUser.class));
-        verify(accountRepository, times(1)).save(any(Account.class));
         assertThat(result.getCurrency()).isEqualTo(createUserAccountDto.getCurrency());
         assertThat(result.getBalancePln()).isEqualTo(createUserAccountDto.getDeposit());
         assertThat(result.getBalanceCurrency()).isZero();
@@ -88,7 +77,7 @@ class CreateUserAccountUseCaseTest {
 
         assertThatThrownBy(() -> createUserAccountUseCase.execute(createUserAccountDto))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Account with such currency already exists.");
+                .hasMessageContaining("Account with currency USD already exists.");
     }
 
     private CreateUserAccountDto createUserAccountDto() {

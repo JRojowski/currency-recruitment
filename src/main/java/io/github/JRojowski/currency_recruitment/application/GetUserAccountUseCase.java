@@ -1,7 +1,9 @@
 package io.github.JRojowski.currency_recruitment.application;
 
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
+import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
+import io.github.JRojowski.currency_recruitment.infrastructure.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,14 @@ class GetUserAccountUseCase {
 
     private final AccountRepository accountRepository;
 
-    public UserAccountDto execute(UUID id) {
-        return accountRepository.findById(id)
-                .map(UserAccountDto::fromAccount)
-                .orElseThrow(() -> new RuntimeException("Account not found."));
+    UserAccountDto execute(UUID id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+        if (!account.getBankUser().getPersonalId().equals(SecurityUtils.getLoggedUserPersonalId())) {
+            throw new IllegalArgumentException("Access denied!");
+        }
+
+        return UserAccountDto.fromAccount(account);
     }
 }

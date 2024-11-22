@@ -16,11 +16,12 @@ class InMemoryAccountRepository implements AccountRepository {
 
     @Override
     public Account save(Account account) {
-        return hashMap.putIfAbsent(account.getId(), account);
+        hashMap.put(account.getId(), account);
+        return account;
     }
 
     @Override
-    public List<Account> findAllByUserId(UUID id) {
+    public List<Account> findAllByBankUserId(UUID id) {
         return hashMap.values().stream().toList();
     }
 

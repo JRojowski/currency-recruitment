@@ -15,7 +15,8 @@ class InMemoryUserRepository implements UserRepository {
 
     @Override
     public BankUser save(BankUser bankUser) {
-        return hashMap.putIfAbsent(bankUser.getId(), bankUser);
+        hashMap.put(bankUser.getId(), bankUser);
+        return bankUser;
     }
 
     @Override
@@ -23,5 +24,11 @@ class InMemoryUserRepository implements UserRepository {
         return hashMap.values().stream()
                 .filter(usr -> usr.getPersonalId().equals(personalId))
                 .findFirst();
+    }
+
+    @Override
+    public boolean existsByPersonalId(String personalId) {
+        return hashMap.values().stream()
+                .anyMatch(usr -> usr.getPersonalId().equals(personalId));
     }
 }

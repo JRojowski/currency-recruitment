@@ -20,7 +20,6 @@ import java.util.UUID;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
@@ -36,6 +35,7 @@ public class Account {
 
     public static Account fromCreateDto(CreateUserAccountDto createUserAccountDto) {
         Account account = new Account();
+        account.setId(UUID.randomUUID());
         account.setCurrency(createUserAccountDto.getCurrency());
         account.setBalancePln(createUserAccountDto.getDeposit());
         account.setBalanceCurrency(BigDecimal.ZERO);

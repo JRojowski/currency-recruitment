@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface AccountRepository {
-    Account save(Account account);
-    List<Account> findAllByUserId(UUID id);
+    Account save(Account entity);
+    List<Account> findAllByBankUserId(UUID id);
     Optional<Account> findById(UUID id);
 }

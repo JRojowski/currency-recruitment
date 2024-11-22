@@ -23,8 +23,7 @@ public class UserAccountFacade {
     }
 
     public List<UserAccountDto> getUserAccounts() {
-        String personalId = "Take from Security";
-        return getUserAccountsUseCase.execute(personalId);
+        return getUserAccountsUseCase.execute();
     }
 
     public UserAccountDto getUserAccount(UUID id) {
