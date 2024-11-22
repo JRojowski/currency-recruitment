@@ -5,11 +5,12 @@ import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
-import io.github.JRojowski.currency_recruitment.core.port.ExchangeRateProvider;
+import io.github.JRojowski.currency_recruitment.infrastructure.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 @Service
@@ -17,12 +18,45 @@ import java.util.UUID;
 class ExchangeCurrencyUseCase {
 
     private final AccountRepository accountRepository;
-    private final ExchangeRateProvider exchangeRateProvider;
+    private final ExchangeRateFacade exchangeRateFacade;
 
-    public UserAccountDto execute(UUID id, ExchangeRequestDto exchangeRequestDto) {
+    UserAccountDto execute(UUID id, ExchangeRequestDto exchangeRequestDto) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found."));
 
         boolean isPlnTransaction = exchangeRequestDto.getCurrency().equals(Currency.PLN);
+
+        validateTransaction(exchangeRequestDto, account, isPlnTransaction);
+
+        BigDecimal exchangeRate = exchangeRateFacade.getExchangeRate(account.getCurrency());
+
+        if (exchangeRate.compareTo(BigDecimal.ZERO)  < 0) {
+            throw new IllegalArgumentException("Invalid exchange rate: must be greater than zero.");
+        }
+
+        BigDecimal exchangedAmount = calculateExchangedAmount(
+                exchangeRequestDto.getAmount(),
+                exchangeRate,
+                isPlnTransaction
+        );
+
+        if (isPlnTransaction) {
+            // from PLN to Currency
+            account.setBalancePln(account.getBalancePln().subtract(exchangeRequestDto.getAmount()));
+            account.setBalanceCurrency(account.getBalanceCurrency().add(exchangedAmount));
+        } else {
+            // from currency to PLN
+            account.setBalanceCurrency(account.getBalanceCurrency().subtract(exchangeRequestDto.getAmount()));
+            account.setBalancePln(account.getBalancePln().add(exchangedAmount));
+        }
+
+        accountRepository.save(account);
+        return UserAccountDto.fromAccount(account);
+    }
+
+    private void validateTransaction(ExchangeRequestDto exchangeRequestDto, Account account, boolean isPlnTransaction) {
+        if (!account.getBankUser().getPersonalId().equals(SecurityUtils.getLoggedUserPersonalId())) {
+            throw new IllegalArgumentException("Access denied!");
+        }
 
         if (!isPlnTransaction && !account.getCurrency().equals(exchangeRequestDto.getCurrency())) {
             throw new RuntimeException("Account currency mismatch.");
@@ -33,24 +67,13 @@ class ExchangeCurrencyUseCase {
         if (currentBalance.compareTo(exchangeRequestDto.getAmount()) < 0) {
             throw new RuntimeException("Not enough money (%s).".formatted(exchangeRequestDto.getCurrency()));
         }
+    }
 
-        BigDecimal exchangeRate = exchangeRateProvider.getCurrencyExchangeRate(
-                isPlnTransaction ? Currency.PLN : exchangeRequestDto.getCurrency(),
-                isPlnTransaction ? account.getCurrency() : Currency.PLN
-        );
-
-        BigDecimal exchangedAmount = exchangeRequestDto.getAmount().multiply(exchangeRate);
-
-        if (isPlnTransaction) {
-            account.setBalancePln(account.getBalancePln().subtract(exchangeRequestDto.getAmount()));
-            account.setBalanceCurrency(account.getBalanceCurrency().add(exchangedAmount));
+    private BigDecimal calculateExchangedAmount(BigDecimal amount, BigDecimal rate, boolean isMultiplication) {
+        if (isMultiplication) {
+            return amount.divide(rate, 2, RoundingMode.DOWN);
         } else {
-            account.setBalanceCurrency(account.getBalanceCurrency().subtract(exchangeRequestDto.getAmount()));
-            account.setBalancePln(account.getBalancePln().add(exchangedAmount));
+            return amount.multiply(rate).setScale(2, RoundingMode.DOWN);
         }
-
-        accountRepository.save(account);
-
-        return UserAccountDto.fromAccount(account);
     }
 }

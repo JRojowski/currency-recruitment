@@ -3,10 +3,7 @@ package io.github.JRojowski.currency_recruitment.application;
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.BankUser;
-import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,8 +15,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static io.github.JRojowski.currency_recruitment.core.domain.Currency.USD;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)

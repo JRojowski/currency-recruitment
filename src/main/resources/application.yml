@@ -10,3 +10,4 @@ spring:
         hibernate:
             ddl-auto: update
 
+NBP_URL: "https://api.nbp.pl/api/"

@@ -6,7 +6,6 @@ import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
 import io.github.JRojowski.currency_recruitment.core.port.ExchangeRateProvider;
-import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -92,7 +91,7 @@ class ExchangeCurrencyUseCaseTest {
 
         when(accountRepository.findById(ACCOUNT_ID))
                 .thenReturn(Optional.of(existingAccount));
-        when(exchangeRateProvider.getCurrencyExchangeRate(Currency.PLN, CURRENCY_USD))
+        when(exchangeRateProvider.getExchangeRate(CURRENCY_USD))
                 .thenReturn(PLN_TO_USD_CURRENCY);
 
         UserAccountDto result = exchangeCurrencyUseCase.execute(ACCOUNT_ID, exchangeRequestDto);
@@ -111,7 +110,7 @@ class ExchangeCurrencyUseCaseTest {
 
         when(accountRepository.findById(ACCOUNT_ID))
                 .thenReturn(Optional.of(existingAccount));
-        when(exchangeRateProvider.getCurrencyExchangeRate(CURRENCY_USD, CURRENCY_PLN))
+        when(exchangeRateProvider.getExchangeRate(CURRENCY_USD))
                 .thenReturn(USD_TO_PLN_CURRENCY);
 
         UserAccountDto result = exchangeCurrencyUseCase.execute(ACCOUNT_ID, exchangeRequestDto);

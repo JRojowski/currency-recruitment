@@ -5,8 +5,6 @@ import io.github.JRojowski.currency_recruitment.core.domain.BankUser;
 import io.github.JRojowski.currency_recruitment.core.port.UserRepository;
 import io.github.JRojowski.currency_recruitment.infrastructure.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.security.SecurityUtil;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

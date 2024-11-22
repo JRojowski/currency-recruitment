@@ -7,8 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 class GetUserAccountsUseCaseTest {
 
