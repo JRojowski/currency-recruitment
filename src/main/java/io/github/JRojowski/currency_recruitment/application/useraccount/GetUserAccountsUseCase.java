@@ -1,4 +1,4 @@
-package io.github.JRojowski.currency_recruitment.application;
+package io.github.JRojowski.currency_recruitment.application.useraccount;
 
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
 import io.github.JRojowski.currency_recruitment.core.domain.BankUser;
@@ -17,7 +17,7 @@ class GetUserAccountsUseCase {
 
     List<UserAccountDto> execute() {
         BankUser bankUser = userRepository.findByPersonalId(SecurityUtils.getLoggedUserPersonalId())
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
 
         return bankUser.getAccounts()
                 .stream()

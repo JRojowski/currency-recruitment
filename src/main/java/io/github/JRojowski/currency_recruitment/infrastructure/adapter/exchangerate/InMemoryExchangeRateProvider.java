@@ -1,4 +1,4 @@
-package io.github.JRojowski.currency_recruitment.infrastructure.adapter;
+package io.github.JRojowski.currency_recruitment.infrastructure.adapter.exchangerate;
 
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.ExchangeRateProvider;
@@ -11,6 +11,6 @@ class InMemoryExchangeRateProvider implements ExchangeRateProvider {
 
     @Override
     public BigDecimal getExchangeRate(Currency currency) {
-        return new BigDecimal(2);
+        return BigDecimal.valueOf(2);
     }
 }

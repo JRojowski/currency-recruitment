@@ -1,4 +1,4 @@
-package io.github.JRojowski.currency_recruitment.infrastructure.adapter;
+package io.github.JRojowski.currency_recruitment.infrastructure.adapter.account;
 
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;

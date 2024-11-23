@@ -1,7 +1,8 @@
-package io.github.JRojowski.currency_recruitment.application;
+package io.github.JRojowski.currency_recruitment.application.useraccount;
 
 import io.github.JRojowski.currency_recruitment.api.dto.ExchangeRequestDto;
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
+import io.github.JRojowski.currency_recruitment.application.exchangerate.ExchangeRateFacade;
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.AccountRepository;
@@ -21,7 +22,7 @@ class ExchangeCurrencyUseCase {
     private final ExchangeRateFacade exchangeRateFacade;
 
     UserAccountDto execute(UUID id, ExchangeRequestDto exchangeRequestDto) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found."));
+        Account account = accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Account not found."));
 
         boolean isPlnTransaction = exchangeRequestDto.getCurrency().equals(Currency.PLN);
 
@@ -29,7 +30,7 @@ class ExchangeCurrencyUseCase {
 
         BigDecimal exchangeRate = exchangeRateFacade.getExchangeRate(account.getCurrency());
 
-        if (exchangeRate.compareTo(BigDecimal.ZERO)  < 0) {
+        if (exchangeRate.compareTo(BigDecimal.ZERO)  <= 0) {
             throw new IllegalArgumentException("Invalid exchange rate: must be greater than zero.");
         }
 
@@ -44,7 +45,7 @@ class ExchangeCurrencyUseCase {
             account.setBalancePln(account.getBalancePln().subtract(exchangeRequestDto.getAmount()));
             account.setBalanceCurrency(account.getBalanceCurrency().add(exchangedAmount));
         } else {
-            // from currency to PLN
+            // from Currency to PLN
             account.setBalanceCurrency(account.getBalanceCurrency().subtract(exchangeRequestDto.getAmount()));
             account.setBalancePln(account.getBalancePln().add(exchangedAmount));
         }
@@ -59,13 +60,13 @@ class ExchangeCurrencyUseCase {
         }
 
         if (!isPlnTransaction && !account.getCurrency().equals(exchangeRequestDto.getCurrency())) {
-            throw new RuntimeException("Account currency mismatch.");
+            throw new IllegalArgumentException("Account currency mismatch.");
         }
 
         BigDecimal currentBalance = isPlnTransaction ? account.getBalancePln() : account.getBalanceCurrency();
 
         if (currentBalance.compareTo(exchangeRequestDto.getAmount()) < 0) {
-            throw new RuntimeException("Not enough money (%s).".formatted(exchangeRequestDto.getCurrency()));
+            throw new IllegalArgumentException("Not enough money (%s).".formatted(exchangeRequestDto.getCurrency()));
         }
     }
 

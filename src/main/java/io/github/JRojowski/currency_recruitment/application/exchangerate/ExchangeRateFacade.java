@@ -1,4 +1,4 @@
-package io.github.JRojowski.currency_recruitment.application;
+package io.github.JRojowski.currency_recruitment.application.exchangerate;
 
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
 import io.github.JRojowski.currency_recruitment.core.port.ExchangeRateProvider;

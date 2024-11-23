@@ -1,7 +1,8 @@
-package io.github.JRojowski.currency_recruitment.application;
+package io.github.JRojowski.currency_recruitment.application.useraccount;
 
 import io.github.JRojowski.currency_recruitment.api.dto.CreateUserAccountDto;
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
+import io.github.JRojowski.currency_recruitment.application.useraccount.CreateUserAccountUseCase;
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.BankUser;
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
@@ -29,7 +30,7 @@ class CreateUserAccountUseCaseTest {
     private static final String FORENAME = "Forename";
     private static final String SURNAME = "Surname";
     private static final Currency CURRENCY = Currency.USD;
-    public static final BigDecimal DEPOSIT = new BigDecimal(200);
+    private static final BigDecimal DEPOSIT = BigDecimal.valueOf(200);
 
     @Mock
     UserRepository userRepository;
@@ -76,7 +77,7 @@ class CreateUserAccountUseCaseTest {
                 .thenReturn(Optional.of(existingUser));
 
         assertThatThrownBy(() -> createUserAccountUseCase.execute(createUserAccountDto))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Account with currency USD already exists.");
     }
 

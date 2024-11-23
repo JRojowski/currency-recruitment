@@ -1,4 +1,4 @@
-package io.github.JRojowski.currency_recruitment.application;
+package io.github.JRojowski.currency_recruitment.application.useraccount;
 
 import io.github.JRojowski.currency_recruitment.api.dto.CreateUserAccountDto;
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
