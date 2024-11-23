@@ -1,12 +1,13 @@
 package io.github.JRojowski.currency_recruitment.api.controller;
 
 import io.github.JRojowski.currency_recruitment.api.dto.CreateUserAccountDto;
-import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
 import io.github.JRojowski.currency_recruitment.api.dto.ExchangeRequestDto;
-import io.github.JRojowski.currency_recruitment.application.UserAccountFacade;
+import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
+import io.github.JRojowski.currency_recruitment.application.useraccount.UserAccountFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,35 +38,38 @@ class UserAccountController {
     @GetMapping()
     @Operation(summary = "Get users account")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "Successful response"))
+    @SecurityRequirement(name = "basicAuth")
     public ResponseEntity<List<UserAccountDto>> getUserAccounts() {
         List<UserAccountDto> userAccounts = userAccountFacade.getUserAccounts();
         return ResponseEntity.ok(userAccounts);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{accountId}")
     @Operation(summary = "Get user account by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "NotFoundException")
     })
-    public ResponseEntity<UserAccountDto> getUserAccount(@PathVariable UUID id) {
-        UserAccountDto userAccount = userAccountFacade.getUserAccount(id);
+    @SecurityRequirement(name = "basicAuth")
+    public ResponseEntity<UserAccountDto> getUserAccountById(@PathVariable UUID accountId) {
+        UserAccountDto userAccount = userAccountFacade.getUserAccount(accountId);
         return ResponseEntity.ok(userAccount);
     }
 
-    @PutMapping("/{id}/exchange")
-    @Operation(summary = "Get user account by id")
+    @PutMapping("/{accountId}/exchange")
+    @Operation(summary = "Exchange the currency")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "NotFoundException")
     })
-    public ResponseEntity<UserAccountDto> getUseAccount(
-            @PathVariable UUID id,
+    @SecurityRequirement(name = "basicAuth")
+    public ResponseEntity<UserAccountDto> exchangeCurrency(
+            @PathVariable UUID accountId,
             @RequestBody @Valid ExchangeRequestDto exchangeRequestDto
     ) {
-        UserAccountDto userAccount = userAccountFacade.exchangeCurrency(id, exchangeRequestDto);
+        UserAccountDto userAccount = userAccountFacade.exchangeCurrency(accountId, exchangeRequestDto);
         return ResponseEntity.ok(userAccount);
     }
 
