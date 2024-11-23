@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 @Primary
+@SuppressWarnings("unused")
 interface UserRepositoryImpl extends UserRepository, JpaRepository<BankUser, UUID> {
     Optional<BankUser> findByPersonalId(String personalId);
 }

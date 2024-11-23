@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 @Primary
+@SuppressWarnings("unused")
 interface AccountRepositoryImpl extends AccountRepository, JpaRepository<Account, UUID> {
     List<Account> findAllByBankUserId(UUID id);
 }

@@ -2,7 +2,6 @@ package io.github.JRojowski.currency_recruitment.application.useraccount;
 
 import io.github.JRojowski.currency_recruitment.api.dto.CreateUserAccountDto;
 import io.github.JRojowski.currency_recruitment.api.dto.UserAccountDto;
-import io.github.JRojowski.currency_recruitment.application.useraccount.CreateUserAccountUseCase;
 import io.github.JRojowski.currency_recruitment.core.domain.Account;
 import io.github.JRojowski.currency_recruitment.core.domain.BankUser;
 import io.github.JRojowski.currency_recruitment.core.domain.Currency;
