@@ -70,8 +70,8 @@ class ExchangeCurrencyUseCase {
         }
     }
 
-    private BigDecimal calculateExchangedAmount(BigDecimal amount, BigDecimal rate, boolean isMultiplication) {
-        if (isMultiplication) {
+    private BigDecimal calculateExchangedAmount(BigDecimal amount, BigDecimal rate, boolean isPlnTransaction) {
+        if (isPlnTransaction) {
             return amount.divide(rate, 2, RoundingMode.DOWN);
         } else {
             return amount.multiply(rate).setScale(2, RoundingMode.DOWN);

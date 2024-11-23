@@ -14,7 +14,7 @@ class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info().title("Currency Recruitment"))
+                .info(new Info().title("Currency Recruitment Assignment"))
                 .components(new Components().addSecuritySchemes("basicAuth", createSecurityScheme()))
                 .addSecurityItem(new SecurityRequirement().addList("basicAuth"));
     }
