@@ -42,12 +42,12 @@ class ExchangeCurrencyUseCase {
 
         if (isPlnTransaction) {
             // from PLN to Currency
-            account.setBalancePln(account.getBalancePln().subtract(exchangeRequestDto.getAmount()));
-            account.setBalanceCurrency(account.getBalanceCurrency().add(exchangedAmount));
+            account.setBalancePln(account.getBalancePln().subtract(exchangeRequestDto.getAmount()).setScale(2, RoundingMode.DOWN));
+            account.setBalanceCurrency(account.getBalanceCurrency().add(exchangedAmount).setScale(2, RoundingMode.DOWN));
         } else {
             // from Currency to PLN
-            account.setBalanceCurrency(account.getBalanceCurrency().subtract(exchangeRequestDto.getAmount()));
-            account.setBalancePln(account.getBalancePln().add(exchangedAmount));
+            account.setBalanceCurrency(account.getBalanceCurrency().subtract(exchangeRequestDto.getAmount()).setScale(2, RoundingMode.DOWN));
+            account.setBalancePln(account.getBalancePln().add(exchangedAmount).setScale(2, RoundingMode.DOWN));
         }
 
         accountRepository.save(account);

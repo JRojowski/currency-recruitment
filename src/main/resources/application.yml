@@ -1,13 +1,10 @@
 spring:
     application:
         name: "currency-recruitment"
-    datasource:
-        url: "jdbc:mysql://localhost:3306/bankDB?allowPublicKeyRetrieval=true&useSSL=false"
-        password: "admin"
-        username: "admin"
-        driver-class-name: "com.mysql.cj.jdbc.Driver"
     jpa:
         hibernate:
             ddl-auto: update
+    profiles:
+        active: local
 
 NBP_URL: "https://api.nbp.pl/api/"

@@ -29,4 +29,9 @@ class InMemoryAccountRepository implements AccountRepository {
     public Optional<Account> findById(UUID id) {
         return Optional.ofNullable(hashMap.getOrDefault(id, null));
     }
+
+    @Override
+    public void deleteAll() {
+        hashMap.clear();
+    }
 }

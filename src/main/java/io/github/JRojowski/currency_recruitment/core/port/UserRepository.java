@@ -9,4 +9,5 @@ public interface UserRepository {
     BankUser save(BankUser entity);
     Optional<BankUser> findByPersonalId(String personalId);
     boolean existsByPersonalId(String personalId);
+    void deleteAll();
 }

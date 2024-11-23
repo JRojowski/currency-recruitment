@@ -10,4 +10,5 @@ public interface AccountRepository {
     Account save(Account entity);
     List<Account> findAllByBankUserId(UUID id);
     Optional<Account> findById(UUID id);
+    void deleteAll();
 }

@@ -31,4 +31,9 @@ class InMemoryUserRepository implements UserRepository {
         return hashMap.values().stream()
                 .anyMatch(usr -> usr.getPersonalId().equals(personalId));
     }
+
+    @Override
+    public void deleteAll() {
+        hashMap.clear();
+    }
 }
