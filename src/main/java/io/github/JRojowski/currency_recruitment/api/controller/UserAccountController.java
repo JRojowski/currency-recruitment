@@ -28,7 +28,7 @@ class UserAccountController {
     @Operation(summary = "Add new user account")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successful response"),
-            @ApiResponse(responseCode = "400", description = "BadRequestException")
+            @ApiResponse(responseCode = "400", description = "BadRequest")
     })
     public ResponseEntity<UserAccountDto> createUserAccount(@RequestBody @Valid CreateUserAccountDto createUserAccountDto) {
         UserAccountDto userAccount = userAccountFacade.createUserAccount(createUserAccountDto);
@@ -36,7 +36,7 @@ class UserAccountController {
     }
 
     @GetMapping()
-    @Operation(summary = "Get users account")
+    @Operation(summary = "Get the accounts for the currently logged-in user")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "Successful response"))
     @SecurityRequirement(name = "basicAuth")
     public ResponseEntity<List<UserAccountDto>> getUserAccounts() {
@@ -45,7 +45,7 @@ class UserAccountController {
     }
 
     @GetMapping("/{accountId}")
-    @Operation(summary = "Get user account by id")
+    @Operation(summary = "Get the account by its id for the currently logged-in user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
@@ -58,9 +58,10 @@ class UserAccountController {
     }
 
     @PutMapping("/{accountId}/exchange")
-    @Operation(summary = "Exchange the currency")
+    @Operation(summary = "Exchange the currency for the currently logged-in user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "400", description = "BadRequest"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "NotFoundException")
     })

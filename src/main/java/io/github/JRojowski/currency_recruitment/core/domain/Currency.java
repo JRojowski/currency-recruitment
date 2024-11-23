@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum Currency {
     PLN("PLN"),
     USD("USD"),
-    EUR("EUR");
+    EUR("EUR"),
+    CHF("CHF");
 
     private final String code;
 }
