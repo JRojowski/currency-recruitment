@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class ExchangeCurrencyUseCaseTest {
+class ExchangeCurrencyUseCaseTests {
     private static final UUID ACCOUNT_ID = UUID.randomUUID();
     private static final Currency CURRENCY_USD = Currency.USD;
     private static final BigDecimal USD_TO_PLN_CURRENCY = BigDecimal.valueOf(4);

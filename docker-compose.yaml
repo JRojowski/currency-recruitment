@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  currency-recruitment:
+    image: jrojowski/currency-recruitment
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      spring.datasource.url: jdbc:mysql://mysqldb:3306/currencyDB?allowPublicKeyRetrieval=true&useSSL=false
+      spring.datasource.username: admin
+      spring.datasource.password: admin
+      spring.datasource.driver-class-name: com.mysql.cj.jdbc.Driver
+      spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
+      jpa.hibernate.ddl-auto: update
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: currencyDB
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin

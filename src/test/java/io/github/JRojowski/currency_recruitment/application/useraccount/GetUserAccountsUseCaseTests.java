@@ -23,7 +23,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class GetUserAccountsUseCaseTest {
+class GetUserAccountsUseCaseTests {
 
     private static final String PERSONAL_ID = "personalId";
     private static final UUID ACCOUNT_ID = UUID.randomUUID();

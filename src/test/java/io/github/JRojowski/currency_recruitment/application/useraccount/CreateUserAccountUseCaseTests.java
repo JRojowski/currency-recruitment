@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-class CreateUserAccountUseCaseTest {
+class CreateUserAccountUseCaseTests {
 
     private static final String PERSONAL_ID = "97051032562";
     private static final String FORENAME = "Forename";
