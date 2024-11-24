@@ -74,7 +74,7 @@ W RequestBody metody PUT użytkownik podaje walutę oraz kwotę jaką chce wymie
 }.
 
 Metoda POST tworzy jednocześnie użytkownika oraz konto walutowe. Jeśli użytkownik o danym personalId już istnieje,
-to tworzy tylko nowe konto walutowe przypisane do tego użytkownika..
+to tworzy tylko nowe konto walutowe przypisane do tego użytkownika.
 
 
 ## Niezrealizowane plany
@@ -82,4 +82,6 @@ Kolejność przypadkowa:
 * implementacja custom exceptions, żeby zwracać poprawne kody wyjątków,
 * dodanie walidacji hasła do security,
 * test integracyjne sprawdzające rzucane wyjątki,
-* dodanie Liquibase lub Flyway do zarządzania zmianami w schemacie bazy danych.
+* dodanie Liquibase lub Flyway do zarządzania zmianami w schemacie bazy danych,
+* fix na 1 security vulnerability -> znając username, użytkownik może stworzyć konto walutowe dla innego usera
+(trzeba by rozdzielić UserAccountController na User- i AccountController)
