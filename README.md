@@ -29,7 +29,7 @@ Aplikacja jest zabezpieczona poprzez httpBasic w następujący sposób:
 * tworzenia kont jest dostępne bez zabezpieczenia dla wszystkich użytkowników,
 * przy tworzeniu konta użytkownik podaje personalId (może to być PESEL albo username),
 * wszystkie inne endpointy (wymiana walut oraz podgląd kont) są dostępne tylko dla zalogowanych użytkowników,
-* logowanie odbywa się poprzez Basic Auth, gdzie użytkownik podaje personalId oraz hasło,
+* logowanie odbywa się poprzez Basic Auth, gdzie użytkownik podaje personalId oraz dowolne hasło,
 * hasło na ten moment nie jest walidowane, sprawdzane jest tylko istnienie użytkownika,
 * po zalogowaniu użytkownik ma dostęp tylko i wyłącznie do swoich kont.
 
