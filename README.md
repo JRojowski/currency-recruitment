@@ -87,4 +87,5 @@ Kolejność przypadkowa:
 * fix na 1 security vulnerability -> znając username, użytkownik może stworzyć konto walutowe dla innego usera
 (trzeba by rozdzielić UserAccountController na User- i AccountController),
 * zmniejszenie wielkości obrazu dockerowego używając "chudego" obrazu JDK,
-* fix buga -> użytkownik może stworzyć konto PLN <-> PLN, jednak aktualna implementacja NBP nie obsługuje kursu PLN <-> PLN
+* fix buga -> użytkownik może stworzyć konto PLN <-> PLN, jednak aktualna implementacja NBP nie obsługuje kursu PLN <-> PLN,
+* można by uprościć ExchangeCurrencyUseCase tworząc w klasie Account metody, które dodają i odejmują kwoty do pól balance.
