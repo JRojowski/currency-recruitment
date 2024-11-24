@@ -73,8 +73,9 @@ W RequestBody metody PUT użytkownik podaje walutę oraz kwotę jaką chce wymie
 "amount": 100
 }.
 
-Metoda POST tworzy jednocześnie użytkownika oraz konto walutowe. Jeśli użytkownik o danym personalId już istnieje,
-to tworzy tylko nowe konto walutowe przypisane do tego użytkownika.
+Metoda POST tworzy jednocześnie użytkownika oraz konto walutowe. Użytkownik podaje dane osobowe, walutę konta walutowego
+oraz początkowy depozyt w PLN. Jeśli użytkownik o danym personalId już istnieje,
+to aplikacja tworzy tylko nowe konto walutowe przypisane do tego użytkownika.
 
 
 ## Niezrealizowane plany
@@ -84,4 +85,6 @@ Kolejność przypadkowa:
 * test integracyjne sprawdzające rzucane wyjątki,
 * dodanie Liquibase lub Flyway do zarządzania zmianami w schemacie bazy danych,
 * fix na 1 security vulnerability -> znając username, użytkownik może stworzyć konto walutowe dla innego usera
-(trzeba by rozdzielić UserAccountController na User- i AccountController)
+(trzeba by rozdzielić UserAccountController na User- i AccountController),
+* zmniejszenie wielkości obrazu dockerowego używając "chudego" obrazu JDK,
+* fix buga -> użytkownik może stworzyć konto PLN <-> PLN, jednak aktualna implementacja NBP nie obsługuje kursu PLN <-> PLN

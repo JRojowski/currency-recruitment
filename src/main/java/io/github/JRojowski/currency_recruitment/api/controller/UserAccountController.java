@@ -25,7 +25,7 @@ class UserAccountController {
     private final UserAccountFacade userAccountFacade;
 
     @PostMapping("/create")
-    @Operation(summary = "Add new user account")
+    @Operation(summary = "Create new user and/or new currency account for the user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successful response"),
             @ApiResponse(responseCode = "400", description = "BadRequest")
@@ -37,7 +37,10 @@ class UserAccountController {
 
     @GetMapping()
     @Operation(summary = "Get the accounts for the currently logged-in user")
-    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "Successful response"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
     @SecurityRequirement(name = "basicAuth")
     public ResponseEntity<List<UserAccountDto>> getUserAccounts() {
         List<UserAccountDto> userAccounts = userAccountFacade.getUserAccounts();
