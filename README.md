@@ -34,7 +34,8 @@ Aplikacja jest zabezpieczona poprzez httpBasic w następujący sposób:
 * po zalogowaniu użytkownik ma dostęp tylko i wyłącznie do swoich kont.
 
 ## Quick Start
-Aplikację można uruchomić na 2 sposoby:
+Po sklonowaniu repo na dysk,
+aplikację można uruchomić na 2 sposoby:
 
 ### Run Using Docker Image
 Będąc w katalogu aplikacji wystarczy wpisać poniższą komendę:
